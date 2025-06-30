@@ -1,0 +1,758 @@
+---
+title: "Preliminary Analysis of Small States"
+author: "Valerie Cheong Took"
+date: "`r.Sys.Date()`"
+output: pdf_document 
+    
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(wbstats)
+library(broom)
+library(car)
+library(dslabs)
+knitr::opts_chunk$set(echo = TRUE)
+```
+\newpage
+# Executive Summary
+The "Choose Your Own Project" is about studying the economic factors that are key drivers of economic growth in small geographical states relying primarily on their human capital as they do not have natural resources such as oil, minerals. To identify the key drivers, correlation tests between the independent variables(economic indicators) and the response, GDP are carried out as well as regression analysis.  The study identifies that a virtuous circle of economic development can be created as is the case of Singapore which has continuously invested in its economic development and has capitalised on its geographical location. It is critical for a country to well manage its finances and not allow a negative disequilibrium between its exports and its imports.  A recurrent negative Current Account Balance in the case of Mauritius, has restrained to a large extent its economic development.
+
+```{r, include=FALSE}
+options(tinytex.verbose = TRUE)
+```
+
+\newpage
+# 1.Introduction
+Based on the book, *Breakout Nations In Pursuit Of The Next Economic Miracles*, written by *Ruchir Sharma*, there are key economic indicators used to assess whether a nation is on the path of long term economic prosperity.  
+
+According to him, there are four key economic indicators namely:
+
+* **Investment** as a share of GDP, when it stands between 25% and 35%, the economy fully benefits from its positive effects. When investment as a share of GDP falls below 20%, it no longer has a significant positive impact on the economic growth of the country. 
+* **Population Growth** , if it exceeds the 2% threshold which is the rate of replacement, the economy can potentially grow over the long term as it continues to benefit from a pool of locally available workforce.
+* **Manufacturing Sector** needs to account for 20% or more of its GDP to be able to make a significant positive contribution to national economic growth.
+* **Current Account** as a share of GDP, should be positive or a deficit of less than 5%. If the current account deficit persistently averages 5% or more of GDP over a number of years, it is a clear indication that the economy is going into an economic recession. 
+
+Another economic indicator, not mentioned by Ruchir Sharma, is *the level of economic complexity* . This determines how far can a country prosper whenever it experiences an economic boom.The more an economy is complex, it implies that its economic linkages are strong and can facilitate knowledge transfer, allowing for higher chances of a better distribution of economic growth. Messrs Yuriy Gorodnichenko and Dominick Bartelme in their study, *Linkages and Economic Development* (2015) were able to demonstrate that the strength of the economic linkages was positively correlated to measured output per worker and total factor productivity. Economic linkages allow for a more sustained economic development as industrial and technical know-how spreads to various parts of the economy facilitating the country’s process of learning on how to produce (and export) more sophisticated and complex products. New literature has revealed the role of accumulating capabilities (that is, knowledge and the ability to diffuse this knowledge across various economic sectors) in the production of more complex goods. 
+
+To verify these assumptions, 3 countries of the same income class (high income) have been chosen: Singapore, Mauritius and Malta. These three countries share other similarities as well. They are all islands capitalising on their human resources and geographical location, with little natural resources.  All three islands are of relatively small geographical size. Mauritius is a newcomer to this income class and it has been chosen to be compared to the other two countries (Singapore and Malta) who have proven their ability to avoid the “middle income trap”.  
+
+It would be interesting to understand whether the key drivers of economic growth as explained by Mr Sharma have all contributed to the economic development of these three countries, especially Singapore.  Singapore ranked 6th out of 133 countries in 2022 according to the Economic Complexity Index. During the last 20 years, the country’s economy has improved its economic complexity, as its ranking went up from 20th to 6th. Mauritius ranked 90 out of 96 in 2021 in terms of economic complexity. Malta is, unfortunately, not included in this ranking of 133 countries.
+
+
+# 2.Sourcing of Economic Data
+The economic data from World Bank have been used for this study.The data used relates to the period 1979 to 2019. More recent years have been excluded due to the impact of COVID which would have distorted the analysis. The following economic indicators have been selected.
+
+* **GDP in constant 2015 USD** have been used so as to be comparable across the three different countries. Its code is *NY.GDP.MKTP.KD*
+* **Gross Capital Formation** as a % of GDP have been taken as the proxy for the level of domestic investment. Its code is *NE.GDI.TOTL.ZS*
+* **Foreign direct investment, net inflows** as a % of GDP. Its code is *BX.KLT.DINV.WD.GD.ZS*
+* **Manufacturing** as a % of GDP. Its code is *NV.IND.MANF.ZS*
+* **Current Account** as a % of GDP. Its code is *BN.CAB.XOKA.GD.ZS*
+* **Working Population**, population ages 15 to 64 as a % of total population. Its code is *SP.POP.1564.TO.ZS*
+
+
+# 3.Methodology
+Two approaches will be used in this study to test whether the chosen economic indicators have any significant influence on the economic growth of the selected sample of countries
+
+
+## A.Correlation Tests
+The first and simpler one is to carry out correlation tests between the selected indicators and GDP.If the correlation tests are positive, it implies that they contribute positively to GDP growth. The **Spearman** correlation test has been chosen.It is used to measure the strength of the relationship and does not assume a linear relationship. It is appropriate for both continuous and ordinal data and is robust to outliers.  It calculates the correlation based on the ranks of the data points.
+
+
+## B.Regression Analysis
+Correlation quantifies the association between a single pair of variables rather than a larger number of variables.  It may be the case that the synergies between various economic indicators drives economic growth rather than it be the result of one single economic indicator. So, effecting a regression analysis with all economic indicators and finding out which subset works best for each country will also be part of this study. 
+
+
+### B.1 Method Of Selection Of The Economic Indicators For The Regression Analysis
+Backward selection will be applied to select the subset of economic indicators that are the right fit. All the four economic indicators are, therefore, included in the first model and then the economic indicator with the largest p value is removed – that is, the variable that is the least statistically significant. This procedure continues until all remaining variables have a p value of 1% or less. 
+
+
+### B.2 Interpretation Of The Regression Analysis
+The model is the best fit when the p value is small - 1% and 5%.  
+
+Another way to counter verify is to check the Adjusted R Squared. It is a more robust indicator than R Squared. R Squared will always increase when more variables are added to the model, even if those variables are only weakly associated with the response. This is why we focus on the adjusted R squared. It looks at whether additional input variables are contributing to the model. The adjusted R square can decrease if a new predictor does not improve the model’s fit. 
+
+We can also plot the residuals versus the predicted values of GDP.  Ideally, the residual plot will show no discernible pattern.  The presence of a pattern may indicate a problem with some aspect of the model.
+
+Another indicator that we can use to assess the regression model is the Akaike Information Criterion (AIC) for small datasets. According to the AIC, the best fit model is the one that explains the greatest amount of variation using the fewest possible independent variables. Lower AIC scores are better. AIC is a better indicator when it comes to model comparison.
+
+
+# 4.Exploratory Analysis
+## A. Dataset Creation
+The package *wbstats* is used to download the data from the World Bank Database. We first define the list of countries and the set of economic indicators (independent variables) for this study.
+```{r}
+countrylist <- c("Mauritius" = "MUS", "Malta" = "MLT", "Singapore" = "SGP")
+# Grouping all the four economic indicators into one single vector
+my_indicators <- c("GDP" = "NY.GDP.MKTP.KD", "Domestic Investment" = "NE.GDI.TOTL.ZS", "FDI" = "BX.KLT.DINV.WD.GD.ZS", "Manufacturing" = "NV.IND.MANF.ZS", "Current Account" = "BN.CAB.XOKA.GD.ZS", "Working Pop" = "SP.POP.1564.TO.ZS")
+
+# downloading the data
+df <- wb_data(indicator = my_indicators, country = countrylist, start_date = 1976, end_date = 2019)
+```
+## B.Data Wrangling
+All data relevant to each country is selected and saved into one vector for each country. 
+```{r}
+# Singapore Data
+df_singapore <- df %>%
+  filter(country == "Singapore")
+# Malta Data
+df_malta <- df %>%
+  filter(country == "Malta")
+# Mauritius
+df_mauritius <- df %>%
+  filter(country == "Mauritius")
+```
+
+# 5.Data Pre processing and Results of the Analysis
+We proceed country by country starting with Singapore. The various R coding for the correlation tests for Singapore are also included in the following section. 
+
+## A.Singapore
+### A.1 Exploratory Analysis 
+```{r}
+summary(df_singapore)
+```
+We can note that the level of domestic investment for Singapore has largely been above the minimum threshold of 25% given that the mean level is 32.64% of GDP whilst it has reached a maximum level of 46.93%. Its manufacturing sector has also exceeded the required 20% level with its mean to be at 22.72%. On the other hand, FDI as a % of GDP was not as high as one would expect given that Singapore is one of the most open economies and has adopted a low tax strategy. 
+
+It would be interesting to know for how many years has Singapore been able to maintain its level of domestic investment and of the manufacturing sector above the minimum required threshold.
+
+
+**Deep Dive Analysis**
+```{r}
+# Number of years that the manufacturing sector's contribution is equal to or exceeds 20%
+df_singapore_manf <- df_singapore %>%
+  filter(Manufacturing >= 20)
+
+nrow(df_singapore_manf)
+
+# Number of years the level of domestic investment equals to or exceeds 35%
+df_singapore_dominv <- df_singapore %>%
+  filter(`Domestic Investment` >= 35)
+
+nrow(df_singapore_dominv)
+
+# Number of years current account deficit exceeds or equals to 5%
+df_singapore_currentacc <- df_singapore %>%
+  filter(`Current Account` <= -5)
+
+nrow(df_singapore_currentacc)
+```
+
+Further investigation shows that 36 years out of the 43 years under review, Singapore‘s manufacturing sector contributed more than 20% to the country’s GDP. Similarly, the level of domestic investment has exceeded the 35% threshold level for 18 years. In addition, its current account deficit exceeded 5%  only in 11 years out of the 43 year period. These results indicate that the country has, most of the time, exceeded or attained the different threshold levels. This may, therefore, explain the economic performance of Singapore being consistently one of the world’s top performers.
+
+**Exploratory Graphics of Independent Variables with GDP**
+```{r}
+plot(df_singapore$`Domestic Investment`, df_singapore$GDP)
+lines(lowess(df_singapore$`Domestic Investment`, df_singapore$GDP), col = "blue")
+```
+The plot above seems to indicate a relationship between Domestic Investment and GDP, though it is not linear.  The graphic slightly resembles a bell shaped curve skewed towards the right.  In this case, if the variable, Domestic Investment, remains as is, its largest values may have a larger leverage in determining the regression coefficient than those closer to the mean.  When the values have been log transformed, the leverage of the points with largest values remain large but are less dominating.
+
+```{r, fig.cap= "Exploratory Graphics of Independent Variables with GDP"}
+plot(df_singapore$FDI, df_singapore$GDP)
+lines(lowess(df_singapore$FDI, df_singapore$GDP), col = "red")
+
+plot(df_singapore$`Current Account`, df_singapore$GDP)
+lines(lowess(df_singapore$`Current Account`, df_singapore$GDP), col = "green")
+
+plot(df_singapore$`Working Pop`, df_singapore$GDP)
+lines(lowess(df_singapore$`Working Pop`, df_singapore$GDP), col = "grey")
+```
+The above graphics indicate that all three predictors (FDI, Current Account and Working Population) have a positive linear relationship with the response, GDP. However, in the case of Working Population, the relationship seems to turn negative at a certain point in time due to the diminishing returns to labour or due to higher strain on resources. Adding more labour to the workforce without investing into more equipment will not generate as much revenue as it is expected. Also, as Singapore is a small country and population is on the rise, there is more pressure on the existing infrastructure and on housing so that this may hinder economic growth. We would need to investigate further to confirm what is affecting negatively output per labour. 
+
+```{r, fig.cap= "Exploratory Graphic of Manufacturing against GDP"}
+plot(df_singapore$Manufacturing, df_singapore$GDP)
+lines(lowess(df_singapore$Manufacturing, df_singapore$GDP), col = "blue")
+```
+In regards to Manufacturing, the relationship with GDP seems to be cyclical. This is expected as businesses tend to expand when the economy is growing and maintain status quo or reduce their production capacity when the economy contracts. The variable Manufacturing will also need to be transformed when we come to the regression analysis.
+
+We now proceed with the correlation tests. 
+
+### A.2 Correlation Tests
+Below are a series of correlation tests between GDP and the other five economic indicators. 
+```{r}
+attach(df_singapore)
+
+# FDI and GDP
+cor(FDI, GDP, method = "spearman")
+
+# Domestic Investment and GDP
+cor(`Domestic Investment`, GDP, method = "spearman")
+
+# Manufacturing and GDP
+cor(Manufacturing, GDP, method = "spearman")
+
+# Working Population and GDP
+cor(`Working Pop`, GDP, method = "spearman")
+
+# Current Account and GDP
+cor(`Current Account`, GDP, method = "spearman")
+```
+
+Based on the above, the correlation tests confirmed that only three economic indicators have a positive relationship with GDP namely: FDI, the level of working population and the current account. Out of the three, Working Population has the most positive impact on GDP. It is widely known that Singapore attracts a lot of international talent so as to mitigate the impact of its ageing population. Domestic Investment and Manufacturing, both have a negative relationship with GDP. Also, manufacturing seems to have the weakest effect on GDP based on the value of its correlation coefficient. As their relationship with GDP is not linear, the correlation tests have not been able to capture the *true* nature of their relationship.
+
+We now examine the relationship between the different predictors, more precisely, between FDI and Manufacturing to ascertain whether FDI is being injected in the economy to increase the productive capacity of the country. It is also interesting to verify the relationship between Domestic Investment and Manufacturing - whether local businesses are also contributing to expand the manufacturing capacity of the country. 
+
+```{r}
+plot(df_singapore$FDI, df_singapore$Manufacturing)
+lines(lowess(df_singapore$FDI, df_singapore$Manufacturing), col = "grey")
+
+plot(df_singapore$`Domestic Investment`, df_singapore$Manufacturing)
+lines(lowess(df_singapore$`Domestic Investment`, df_singapore$Manufacturing), col = "red")
+```
+Both graphics displays a cyclical relationship between FDI and Manufacturing and Domestic Investment and Manufacturing. This is also expected as in times of economic boom, investors and businesses are incentivised to invest due to the increase in the level of demand but in times of economic slowdown, the investors will take a wait and see attitude whilst businesses will tend to reduce their production level so as not to inflate the level of inventories. 
+
+Additional correlation tests now are carried out to confirm these relationships. However, the correlation tests may not be conclusive as they are not meant to assess cyclical relationships.
+```{r}
+attach(df_singapore)
+
+# FDI and Manufacturing
+cor(FDI, Manufacturing, method = "spearman")
+
+# Domestic Investment and Manufacturing
+cor(`Domestic Investment`, Manufacturing, method = "spearman")
+```
+Based on the value of their correlation coefficient, it seems that the level of FDI moves in opposite direction to the manufacturing sector. It is also noted that the relationship between domestic investment and manufacturing is weak. Thus, the correlation tests have not been able to depict the relationship between these variables.  
+
+
+### A.3 Regression Analysis
+The loess() function is usually used to to capture non linear relationships between variables. It can be used for a maximum of 4 explanatory variables.  However, in this study we have 5 predictors. Therefore, we are going to use the lm() function using all 5 indicators – fit_singapore. Two explanatory variables namely Manufacturing and Domestic Investment will be log transformed due to their non linear relationship with GDP. 
+
+**Model 1 - All Indicators**\
+From the output of fit_singapore, most of the predictors have significant coefficients at 0.1% and the p value is quite small.  However, the intercept is significant at 0.5% whilst the coefficient of the Current Account is not significant. Adjusted R Squared is quite close to 1.
+```{r}
+# Model 1 - With all indicators
+fit_singapore <- lm(GDP ~ FDI + log(`Domestic Investment`) + log(Manufacturing) + `Current Account` + `Working Pop`, data = df_singapore)
+
+summary(fit_singapore)
+```
+
+**Assessment Of Multicollinearity**\
+To assess the quality of fit, we are going to calculate a number of indicators.
+* *The Variance Inflation Factor* (VIF) is calculated to ensure that that the economic indicators are not related to each other – the presence of multicollinearity. VIF value that is greater than 5 or 10 can indicate a problematic amount of collinearity. The economic indicators: Current Account and Working Population have a VIF value greater than 5. 
+* A *correlation matrix* involving all five indicators is computed to further check the existence of multicollinearity. 
+* The AIC value which will be compared to the other models to assess which is the best fit.
+```{r}
+broom::glance(fit_singapore)
+
+# Calculation Variance Inflation Factor
+library(car)
+vif(fit_singapore)
+
+# Correlation Matrix
+cor_matrix_sing <- cor(df_singapore[c("FDI", "Domestic Investment", "Manufacturing", "Working Pop", "Current Account")])
+
+cor(cor_matrix_sing)
+```
+It is clear that all the economic indicators are related to each other. Thus, the model, fit_singapore, may not be accurate. 
+
+**Model 2 - With Two Indicators: Domestic Investment and Manufacturing**\
+To reduce the effects of multicollinearity, the collinear variables can either be combined into a single predictor or the redundant variables are removed. In the first place, the redundant variables are removed: FDI, Working Population and Current Account. Manufacturing and Domestic Investment have a weaker positive relationship and are, therefore kept in the new model. 
+```{r}
+# Model 2
+fit_singapore.model2 <- lm(GDP ~ log(`Domestic Investment`) + log(Manufacturing), data = df_singapore)
+
+summary(fit_singapore.model2)
+
+broom::glance(fit_singapore.model2)
+```
+The new model, fit_singapore.model2, has a lower adjusted R squared despite the fact that all coefficients are significant at 1% level including the intercept. The p value is quite small, implying that the relationship is statistically significant. However, in terms of the AIC, its value is higher so it means that this model is not as good as the first model, fit_singapore.
+
+**Model 3 - Interaction Term**\
+We now create a third model by introducing an interaction term namely the multiplication of FDI and Current Account. Both variables have a strong positive relationship and they are also correlated with Working population, Domestic Investment and Manufacturing. In essence, there is no need to add any other variable in the model. 
+
+```{r}
+attach(df_singapore)
+# Model 3 - Interaction Term
+# Introducing an interaction term: FDI and Current Account
+df_singapore$FDI.CurrAcc <- interaction(FDI, `Current Account`)
+
+# Model with the interaction term
+fit_singapore_interaction <- lm(df_singapore$GDP ~ df_singapore$FDI + df_singapore$`Current Account` + df_singapore$FDI.CurrAcc, data = df_singapore, na.action = na.exclude)
+
+summary(fit_singapore_interaction)
+```
+A look at the output of the model, fit_singapore_interaction, indicates that this model has not resolved the multicollinearity problem between the explanatory variables and is, therefore, not reliable.  
+
+**Model 4 - Polynomial Regression**\
+As the relationship between GDP and FDI is cyclical, a polynomial regression - a quadratic equation may be a better fit. We are also going to include Domestic Investment and Manufacturing as based on the correlation matrix, they both have a weak relationship with the other variables. 
+
+```{r}
+# Model 4 - Polynomial Regression
+quad.sing.3 <- GDP ~ FDI + I(FDI^2) + log(Manufacturing) + log(`Domestic Investment`)
+fit_singapore_quadratic <- lm(quad.sing.3, data = df_singapore)
+
+summary(fit_singapore_quadratic)
+
+broom::glance(fit_singapore_quadratic)
+```
+Based on the output of the polynomial regression, it can be inferred that this model is the best fit based on its AIC value, 2267 which is the lowest amongst all the existing models even though its adjusted R squared is not as high as the first model, fit_singapore. We can also note that the coefficients for FDI and FDI^2 are not significant.  However, their presence do contribute to a better quality of the regression model since the adjusted R squared for this model is higher than fit_singapore_model2.  
+
+**Assessment of Sequential Correlation**\
+It is surprising to note that the coefficients of both Manufacturing and Domestic Investment are negative. It would have been more logical that they are positive as expanding the productive capacity of the country leads to more exports and therefore, revenue for the country. This may be due to **sequential correlation** whereby observations that are close together in time are highly correlated. Sequential correlation violates the assumption that error terms are independent and identically distributed. In essence, the presence of sequential correlation leads to incorrect conclusions about the relationship of GDP and the other economic indicators. 
+
+To assess whether there is sequential correlation:
+```{r, fig.cap= "Assessment for Sequential Correlation"}
+acf(residuals(fit_singapore_quadratic))
+
+plot(predict(fit_singapore_quadratic), residuals(fit_singapore_quadratic))
+```
+
+The acf() function is used. In the plot, the blue dashed lines represent the confidence intervals at 95%. The vertical axis represents the autocorrelation and the horizontal axis represents the lag. The autocorrelation at lag0 is included by default. This always takes the value of 1, since it is the correlation between the data series and itself. Interest is the autocorrelations at lag1 and later lags. There is no significant autocorrelation as none of the spikes go beyond the confidence bounds. However, the bar heights indicate a seasonal trend. 
+
+This is confirmed in the plot of fitted values against the residuals. The scatterplot indicates that there is some kind of trend. Thus, it is confirmed that the model, fit_singapore_quadratic is not the best fit. Given the presence of seasonality, the ARIMA model would need to be used to find a better model. However, this is beyond the scope of this study. 
+
+We now proceed to have a closer look at the data related to Malta. 
+
+## B.Malta
+### B.1 Exploratory Analysis and Data Wrangling
+```{r}
+summary(df_malta)
+```
+Based on the detailed information of the data related to Malta, it is noted that its manufacturing sector has definitely reached the 20% threshold for the period under review given that its maximum stands at 28.1% and its mean is at 17.54%. In regards to its level of domestic investment, its maximum level reaches 30.63% indicating that it has reached the minimum threshold of 25% sometime during the period under review. It is also interesting to note that Malta’s level of FDI is quite substantial and far surpasses the rest of the sample of countries with its mean at 67.47% reaching a maximum of 452.2%.  It can be safely assumed that these are monies transiting through the offshore centre of the country as Malta is well known to be a tax haven. This also implies that the variable, FDI, is largely skewed to the right and we would need to apply a logarithmic transformation. However, transforming negative values to logarithmic values would result in NaN values. 
+
+In this case, it is best to remove the outlier value(s) so that they do not skew the results and lead to inaccurate interpretation.  To do so, a boxplot of the FDI’s data is plotted as shown the figure below.
+```{r, fig.cap= "Identifying outliers"}
+# Identifying outliers
+boxplot(df_malta$FDI)
+```
+From the boxplot, it is noted that there are a few outlier points above the 100% level in regards to the Maltese FDI data. Removing these outlier points will lead to better interpretation results. 
+```{r}
+# Removing outliers
+df_malta_clean <- df_malta %>%
+  filter(FDI <= 100)
+
+knitr::kable(summary(df_malta_clean), caption = "Summary of Maltese cleaned dataset")
+```
+We can note a few changes in the *clean* database.  The mean level of FDI is now 9.1% and its maximum is 79.75% - relatively high. Its median value is 2.9%. In this case and if there is need be, it is better that we use the median value given the large range of values.  We can also note that the mean of the Manufacturing sector has changed to 19.33% and that of the Current Account now stands at a deficit of 0.27%. We can safely conclude that removing the outliers did not have a major impact on the remaining data. 
+
+**Deep Dive Analysis**\
+A deeper dive in reveals that the Maltese manufacturing sector’s contribution was at least 20% of GDP for 17 years. Its level of domestic investment also exceeded the 25% threshold for almost the same amount of time:18 years.  Malta had a current account deficit exceeding or equal to 5% for 6 years out of the 43 years, indicating that the country was able to well manage its expenditure for most of the time. These results indicate that the country was able to create a virtuous circle of economic growth resulting into a long term economic prosperity.
+
+```{r}
+# Number of years the Maltese Manufacturing sector's contribution equals or exceeds 20%
+df_malta_clean_manf <- df_malta_clean %>%
+  filter(Manufacturing >= 20)
+
+nrow(df_malta_clean_manf)
+
+# Number of years the level of the Maltese Domestic Investment equals or exceeds 25%
+df_malta_clean_dominv <- df_malta_clean %>%
+  filter(`Domestic Investment` >= 25)
+
+nrow(df_malta_clean_dominv)
+
+# Number of years that the Maltese current account deficit exceeded 5%
+df_malta_clean_currentacc <- df_malta_clean %>%
+  filter(`Current Account` <= -5)
+
+nrow(df_malta_clean_currentacc)
+```
+
+**Exploratory Graphics of Independent Variables With GDP**\
+We shall now explore the relationship of GDP with the other economic indicators.
+```{r, fig.cap= "Relationship between FDI and GDP"}
+# Plot of FDI against GDP
+plot(df_malta_clean$FDI, df_malta_clean$GDP)
+lines(lowess(df_malta_clean$FDI, df_malta_clean$GDP), col = "blue")
+```
+The graphic demonstrates that the relationship is cyclical. This is more typical as investors are attracted to economies which are experiencing an economic boom and will recall their monies when the economy is slowing down. Given that Malta is a tax haven, it may be easier for investors to recall their monies and invest elsewhere when the country's economy is in recession. 
+
+```{r, fig.cap= "Exploratory Graphics of Independent Variables with GDP"}
+attach(df_malta_clean)
+
+# Plot Manufacturing against GDP
+plot(Manufacturing, GDP)
+lines(lowess(Manufacturing, GDP), col = "darkblue")
+
+# Plot Domestic Investment against GDP
+plot(`Domestic Investment`, GDP)
+lines(lowess(`Domestic Investment`, GDP), col = "red")
+
+# Plot Current Account against GDP
+plot(`Current Account`, GDP)
+lines(lowess(`Current Account`, GDP), col = "green")
+```
+All three graphics detailed above illustrate a linear negative relationship between GDP and the following three explanatory variables: Manufacturing, Domestic Investment and Current Account.  It is widely known that many countries are focusing on growing their services sector rather than their manufacturing sector despite the fact the manufacturing sector has a much wider spill over effects on the rest of the economy. When factories are expanding their productive capacities, they need more machinery, tools, better infrastructure (power supply, more road networks) which in turn generate more demand for jobs and better work prospects for the local workforce. Furthermore, as there is less manufacturing activities in times of economic boom, Malta has to import more for the local demand in terms of goods. This may explain why the Current account has a negative relationship with GDP. As for Domestic Investment, with the massive inflows of FDI, there may be a *crowding out effect* of domestic investment especially in case when foreign firms are more productive than local businesses. However, we would need to investigate further for us to confirm these hypotheses. 
+
+```{r}
+# Plot Working Population against GDP
+plot(`Working Pop`, GDP)
+lines(lowess(`Working Pop`, GDP), col = "darkblue")
+```
+The shape of the graphic is similar to that of the Singaporean data. Malta is also a small country and if the available pool of resources (housing, infrastructure) is not well managed, labour output per worker may decline. As the share of manufacturing in GDP is on the decline, we can also infer that insufficient investment is made in the productive capacity, impacting adversely labour output per worker. 
+
+We now start the correlation tests. 
+
+### B.2 Correlation Tests
+```{r}
+attach(df_malta_clean)
+# Correlation between GDP and FDI
+cor(FDI, GDP, method = "spearman")
+
+# Domestic Investment and GDP
+cor(`Domestic Investment`, GDP, method = "spearman")
+
+# Manufacturing and GDP
+cor(Manufacturing, GDP, method = "spearman")
+
+# Working Population and GDP
+cor(`Working Pop`, GDP, method = "spearman")
+
+# Current Account and GDP
+cor(`Current Account`, GDP, method = "spearman")
+```
+The correlation tests confirm that Manufacturing, Current Account and Domestic Investment all have a negative linear relationship with GDP. Working Population as well as FDI has a positive relationship with GDP.  As was the case for Singapore, non linear relationship are not able to be detected by the correlation tests. It is interesting to note that the manufacturing sector moves in opposite direction almost 100% of the time as its correlation coefficient is almost negative one.  This confirms what we have noted in the previous exploratory analysis.
+
+Similar to Singapore, we are going to explore the relationship between FDI and Manufacturing and Domestic Investment and Manufacturing respectively. 
+
+```{r}
+# Plot FDI against Manufacturing
+plot(FDI, Manufacturing)
+lines(lowess(FDI, Manufacturing), col = "darkgrey")
+
+# Plot Domestic Investment against Manufacturing
+plot(`Domestic Investment`, Manufacturing)
+lines(lowess(`Domestic Investment`, Manufacturing), col = "darkred")
+```
+The relationship between FDI and Manufacturing is altogether negative. It was initially a positive linear relationship but as Malta starts to focus on its services sector, the role of the Manufacturing sector took a back seat.  The relationship with FDI consequently became a linear negative relationship. On the other hand, the relationship between Domestic Investment and Manufacturing is initially a linear positive relationship but then gradually plateaued. The level of economic complexity for Malta is relatively low, possibly implying that the manufacturing sector may be plagued by outdated technology, limited capacity and reduced competitiveness. This may be why the relationship has plateaued. 
+
+We are now going to do the correlation tests between these explanatory variables. 
+
+```{r}
+# Correlation between FDI and Manufacturing
+cor(FDI, Manufacturing, method = "spearman")
+
+# Correlation between Domestic Investment and Manufacturing
+cor(`Domestic Investment`, Manufacturing, method = "spearman")
+```
+
+ It is confirmed that the level of FDI has a negative relationship with the manufacturing sector, thereby confirming that most of the foreign monies goes to the Maltese offshore sector or to the services sector.  The level of Domestic Investment moves in the same direction as the level of Manufacturing’s contribution as their correlation coefficient is positive but the strength of their relationship is relatively weak, 0.4. Most probably, this is because their relationship has plateaued. 
+
+
+### B.3 Regression Analysis
+A regression analysis is now performed to find out more about the key drivers of economic growth for Malta. A model is first determined using all the five independent variables – fit_malta.  
+
+**Model 1 - With All Indicators**\
+Though Adjusted R Squared is close to 1, only one variable has a significant coefficient at 0.1% namely: Manufacturing.
+```{r}
+# Model 1 - With all indicators
+fit_malta <- lm(GDP ~ Manufacturing + `Domestic Investment` + FDI + `Current Account` + `Working Pop`, data = df_malta_clean)
+
+summary(fit_malta)
+```
+
+**Assessment Of Multicollinearity**\
+Additional analysis is done with the calculation of VIF, correlation matrix and the AIC.  They may explain why most economic indicators do not have significant coefficients in the model, fit_malta.
+```{r}
+# Variance Inflation Factor
+vif(fit_malta)
+```
+Based on the above, we can note that all five variables have VIF values below 5.  
+```{r}
+# Correlation Matrix
+cor_matrix_malta <- cor(df_malta_clean[c("FDI", "Manufacturing", "Domestic Investment", "Current Account", "Working Pop")])
+
+cor(cor_matrix_malta)
+
+broom::glance(fit_malta)
+```
+Based on the above results, we can note that the variable, Current Account is the only one weakly correlated with all other variables as the values of its correlation coefficient are all below 0.5.  The AIC value for this model is 1523.  It needs to be compared with the other models for the Maltese data.
+
+**Model 2 - With One Indicator: Manufacturing**\
+So, we now apply a forward selection approach. We determine a new model with only one variable: Manufacturing.  According to the correlation tests, it has almost 100% impact on GDP.  Based on the output of the model, fit_malta_1, both the intercept and the coefficient of Manufacturing are significant at 0.1%.  As expected, Manufacturing has a negative coefficient.  The p value is relatively small and the adjusted R Squared is close to 1. The AIC has a lower value implying that this model, fit_malta_1 is better than fit_malta.
+```{r}
+# Model 2 with one indicator - Manufacturing
+fit_malta_1 <- lm(GDP ~ Manufacturing, data = df_malta_clean)
+
+summary(fit_malta_1)
+
+broom::glance(fit_malta_1)
+```
+
+**Model 3 - With Manufacturing and Current Account**\
+As the variable, Current Account is weakly correlated to the other variables, we add it to Manufacturing and create a new model, fit_malta_2 to check if Current Account improves the linear model. 
+```{r}
+# Model 3 - With Manufacturing and Current Account
+fit_malta_2 <- lm(GDP ~ Manufacturing + `Current Account`, data = df_malta_clean)
+
+summary(fit_malta_2)
+
+broom::glance(fit_malta_2)
+```
+The model, fit_malta_2, seems to be slightly better with an improvement in adjusted R Squared. The coefficients for both Manufacturing and the intercept are significant at 0.1% and the p value is relatively small.  The coefficient of the Current Account is significant at 5%. The AIC value has decreased once more. Fit_malta_2 is a better model.
+
+*Assessment of Model 2*\
+As an additional verification, the plot of residuals versus predicted values of GDP is calculated.  A closer look tells us that there seems to be a pattern in the plot of residuals against the fitted values of GDP, implying that there is still room for improvement.
+```{r, fig.cap="Plot of Fitted Values against Residuals"}
+plot(predict(fit_malta_2), residuals(fit_malta_2))
+```
+
+**Model 4 - Interaction Term**\
+The same approach as in the case of Singapore is also used for Malta. An interaction term is determined and used to create a new model.  Given that Malta is a well-known tax haven and the level of FDI is well above the norm for the selected sample of countries, FDI, as economic indicator, is deemed to have an impact on the Maltese economy. Furthermore, Malta is a highly industrialised economy though its economy complexity is quite low. FDI is, therefore, used together with the variable, Manufacturing to create a new term. 
+```{r}
+# Model 4 - Interaction Term
+# Introducing an interaction term - Manufacturing and FDI
+df_malta_clean$FDIManf <- interaction(FDI, Manufacturing)
+
+# Model with the interaction term
+fit_malta_interaction <- lm(GDP ~ FDIManf + FDI + Manufacturing, data = df_malta_clean)
+
+summary(fit_malta_interaction)
+
+broom::glance(fit_malta_interaction)
+```
+This new model, fit_malta_interaction, does not solve the multicollinearity problem as well.  Similar to Singapore, a polynomial regression need to be tried on.  In the case of Malta, the economic indicator, FDI must have a significant impact on GDP. A model with a quadratic form will be created with FDI and Current Account as it is the only explanatory variable having weak correlation with the other variables. 
+
+**Model 5 - Polynomial Regression**\
+```{r}
+attach(df_malta_clean)
+# Model 5 - Polynomial Regression
+quad.malta2 <- GDP ~ FDI + I(FDI^2) + `Current Account`
+
+fit_malta_quadratic <- lm(quad.malta2, data = df_malta_clean)
+
+summary(fit_malta_quadratic)
+
+broom::glance(fit_malta_quadratic)
+```
+
+The quadratic model does not seem to be a better fit. Both the Adjusted R Squared and the AIC value indicates this model is worse than the previous ones. 
+
+**Assessment Of Sequential Correlation**\
+The model, fit_malta2 is the best one. It is possible that sequential correlation is distorting the results. The acf() is going to be applied to check for autocorrelation. 
+
+```{r, fig.cap="Assessment of Sequential Correlation - Model 3"}
+acf(residuals(fit_malta_2))
+```
+At lag 1, the spike goes beyond the confidence bound indicating significant auto correlation or sequential correlation. Also, as there are regular spikes at certain lags, there is also a seasonality effect. The ARIMA model would, therefore, be a better model to use for Malta as well. 
+
+
+The following section will cover the analysis on the remaining country, Mauritius.  The same approach is going to be used
+
+## C.Mauritius
+### C.1 Exploratory Data Analysis
+```{r}
+summary(df_mauritius)
+```
+In regards to Mauritius, the manufacturing sector‘s maximum contribution reaches the 20%. Its level of domestic investment has more or less reached the minimum threshold of 25%. However, given the size of the manufacturing sector of Mauritius, we can conclude that most of the local investment is not meant for the manufacturing sector.  It is assumed that it is mainly channelled into the services sector.  The level of FDI for Mauritius is quite negligible. The current account of Mauritius seems to be, most of the time, in deficit as its mean hovers around -4%, contrary to Malta and Singapore. 
+
+**Deep Dive Analysis**
+```{r}
+# Number of years the Mauritian Manufacturing sector contribution equalled or exceeded 20%
+df_mauritius_manf <- df_mauritius %>%
+  filter(Manufacturing >= 20)
+
+nrow(df_mauritius_manf)
+
+# Number of years the level of Domestic Investment exceeded or equalled to 25%
+df_mauritius_dominv <- df_mauritius %>%
+  filter(`Domestic Investment` >= 25)
+
+nrow(df_mauritius_dominv)
+
+# Number of years the level of Current Account deficit equalled or exceeded 5%
+df_mauritius_currentacc <- df_mauritius %>%
+  filter(`Current Account` <= -5)
+
+nrow(df_mauritius_currentacc)
+```
+A closer analysis indicates that Mauritius current account deficit exceeded or equalled 5% for 15 years, which is quite worrisome. The level of domestic investment in Mauritius reached or exceeded the minimum threshold of 25% for 21 years.  Given that the country spends more than it earns, the positive impact of substantial flow of investment monies did not have the desired effects on the Mauritian economy. Also, its manufacturing sector’s contribution to GDP reached the 20% threshold for 9 years only so that we can safely conclude that it was not able to significantly influence the economic growth of the Mauritian economy, over the long term. It may explain why Mauritius is finding it challenging to remain in the "high income" category contrary to Malta and Singapore. 
+
+**Exploratory Graphics of Independent Variables with GDP**
+```{r, fig.cap= "Exploratory Graphics of Independent Variables against GDP"}
+attach(df_mauritius)
+
+# Plot Manufacturing against GDP
+plot(Manufacturing, GDP)
+lines(lowess(Manufacturing, GDP), col = "blue")
+
+# Plot FDI against GDP
+plot(FDI, GDP)
+lines(lowess(FDI, GDP), col = "red")
+
+# Plot Working Population against GDP
+plot(`Working Pop`, GDP)
+lines(lowess(`Working Pop`, GDP), col = "green")
+
+# Plot Current Account against GDP
+plot(`Current Account`, GDP)
+lines(lowess(`Working Pop`, GDP), col = "grey")
+
+# Plot Domestic Investment against GDP
+plot(`Domestic Investment`, GDP)
+scatterplot(`Domestic Investment` ~ GDP, data = df_mauritius, smooth = FALSE, grid = FALSE)
+```
+Only Manufacturing has a linear negative relationship with GDP in the case of Mauritius. FDI, Domestic Investment and Current Account all have a cyclical relationship with GDP. Thus, in case of economic slowdown, the level of demand for goods and services also contracts as well as the level of investments (both local and foreign).  As for Working Population, it is a positive relationship though the curve starts to go backwards indicating diminishing returns of labour, similar to the other two countries. 
+
+### C.2 Correlation Tests
+```{r}
+attach(df_mauritius)
+
+# Correlation between FDI and GDP
+cor(FDI, GDP, method = "spearman")
+
+# Correlation between Domestic Investment and GDP
+cor(`Domestic Investment`, GDP, method = "spearman")
+
+# Correlation between Manufacturing and GDP
+cor(Manufacturing, GDP, method = "spearman")
+
+# Correlation between Working Population and GDP
+cor(`Working Pop`, GDP, method = "spearman")
+
+# Correlation between Current Account and GDP
+cor(`Current Account`, GDP, method = "spearman")
+```
+The correlation tests have been able to identify the correct relationship for Working Population and Manufacturing. As the remaining variables have a cyclical relationship, the correlation tests have failed. 
+
+The relationship between FDI and Manufacturing and the relationship between Domestic Investment and Manufacturing will now be explored. 
+```{r}
+# FDI and Manufacturing
+plot(FDI, Manufacturing)
+lines(lowess(FDI, Manufacturing), col = "darkgreen")
+
+# Domestic Investment and Manufacturing
+plot(`Domestic Investment`, Manufacturing)
+lines(lowess(`Domestic Investment`, Manufacturing), col = "black")
+```
+FDI and Manufacturing have a cyclical relationship. This is most probably due to the national policies initiated by the government, providing financial,legal and fiscal incentives to investment in specific economic sectors. Mauritius started its economic development by setting up the textile manufacturing sector. More recently, the country has been focusing on the services sector such as tourism, financial services, business process outsourcing. As a result, foreign investment has been focusing on those business activities rather than on the Manufacturing sector which has inevitably shrunk. 
+
+Domestic Investment has a positive relationship with Manufacturing though the curve has plateaued. This is probably due to the fact that local businesses are investing to maintain the productive capacity and not to expand the size of their economic activities. We are now going to do the correlation tests. 
+
+```{r}
+# Correlation between FDI and Manufacturing
+cor(FDI, Manufacturing, method = "spearman")
+
+# Correlation between Domestic Investment and Manufacturing
+cor(`Domestic Investment`, Manufacturing, method = "spearman")
+```
+The correlation tests indicate that the relationship between FDI and manufacturing is weak and negative. Domestic investment and manufacturing  has a weak positive relationship as expected, given the reluctance of local businesses to invest into new factories and more modern equipment.    
+
+### C.3 Regression Analysis
+We start by including all indicators in the first model for Mauritius. 
+
+**Model 1 - With All Indicators**\
+The output of the model, fit_mauritius, indicates that FDI is the only variable that does not have a significant coefficient.  All the other variables have significant coefficients at 0.1%. The Adjusted R squared figure is close to 1 and the AIC value is 1908.
+```{r}
+# Model 1 - With all indicators
+fit_mauritius <- lm(GDP ~ `Working Pop` + FDI + `Current Account` + `Domestic Investment` + Manufacturing, data = df_mauritius)
+
+summary(fit_mauritius)
+
+broom::glance(fit_mauritius)
+```
+
+**Assessment of Multicollinearity**\
+All variables have a VIF value of less than 5 including that of FDI.  However, the correlation matrix indicates that that there is multicollinearity amongst the variables. 
+```{r}
+# Calculating VIF
+vif(fit_mauritius)
+
+# Correlation Matrix
+cor_matrix_mtius <- cor(df_mauritius[c("FDI", "Working Pop", "Current Account", "Domestic Investment", "Manufacturing")])
+
+cor(cor_matrix_mtius)
+```
+
+**Model 2 - Polynomial Regression with FDI**\
+We now have to transform the variables so as to determine a new model. FDI correlates with all the other explanatory variables. Given that it has a cyclical relationship with GDP, a polynomial regression will be calculated as the second model, fit_mauritius_quadratic.
+
+```{r}
+# Model 2 - Polynomial Regression with FDI
+quad.mtius1 <- GDP ~ FDI + I(FDI^2)
+
+fit_mauritius_quadratic <- lm(quad.mtius1, data = df_mauritius)
+
+summary(fit_mauritius_quadratic)
+
+broom::glance(fit_mauritius_quadratic)
+```
+All the coefficients estimates of the independent variables of the quadratic model are significant. FDI and the intercept are significant at 1%. The adjusted R Squared stands at 0.6. However, the AIC value, 2208, is higher implying that this polynomial regression is not as good as the first one. 
+
+**Model 3 - With 2 Indicators: Current Account and Working Population**\
+Introducing an interaction term as we have seen for the first two countries does not resolve the multicollinear problem. Referring to the multi correlation matrix, we can note that the variable, Current Account is the least correlated with the other variables. Working Population is correlated with most of the variables except for Current Account. A third model is now going to be calculated using these two variables. 
+
+```{r}
+# Model 3 - With 2 indicators - Current Account and Working Population
+fit_mauritius2 <- lm(GDP ~ `Current Account` + `Working Pop`, data = df_mauritius)
+
+summary(fit_mauritius2)
+
+broom::glance(fit_mauritius2)
+```
+The third model does not provide much improvement from the first one. The AIC value is higher: 1953 and adjusted R Squared is 0.92. In this case, the coefficient estimate for the Working Population and the intercept are significant at 0.1% and for the Current Account at 5%. 
+
+**Model 4 - Excluding FDI**\
+It seems that the first model, fit_mauritius is the best amongst the three models. Given that the coefficient estimate for FDI is not significant, it shall be removed and a new model will be calculated with the rest of the variables: fit_mauritius.excFDI
+
+```{r}
+# Model 4 - Exc FDI
+fit_mauritius.excFDI <- lm(GDP ~ `Working Pop` + `Current Account` + `Domestic Investment` + Manufacturing, data = df_mauritius)
+
+summary(fit_mauritius.excFDI)
+
+broom::glance(fit_mauritius.excFDI)
+```
+This fourth model is an improvement from the first model. Its AIC value is the lowest - 1906.  All coefficient estimates for the explanatory variables and the intercept are significant at 0.1% and its Adjusted R Squared is slightly higher. In this model, only Manufacturing has a negative coefficient. Mauritius has embarked on a strategy whereby is has been focusing on growing its services sector and relocating its textile manufacturing activities in other countries namely Bangladesh, China and Madagascar.  Thus, as the size of the economy grows, the share of Manufacturing is on the decline.  However, in the past two years, there has been attempts at reviving the manufacturing sector and these have not yet produced substantial results. 
+
+**Assessment Of Sequential Correlation - Model 4**
+```{r, fig.cap="Assessment of Model 4 for Sequential Correlation"}
+# Plot fitted values against residuals
+plot(predict(fit_mauritius.excFDI), residuals(fit_mauritius.excFDI))
+```
+There seems to be a pattern in the graphic of fitted values against the residuals implying that this may not be the right fit for Mauritius. Using the acf function does not work in this case as the data in fit_mauritius.excFDI is not evenly spaced. Using acf function in the *nlme* package would require that we use the gls or lme functions to create the model. The model will not be comparable with the previous models. 
+
+**Analysis of Variance**\
+We can use the anova function to compare the three models that have relatively high adjusted R Squared and lower AIC values. 
+
+```{r}
+anova(fit_mauritius2, fit_mauritius.excFDI, fit_mauritius)
+```
+Based on the anova results, it seems that the model excluding the FDI variable is the significant one. However, given that the graphic of fitted values against residuals demonstrate a pattern, it is not the best fit model. 
+
+# 6. Cross Validation of Results
+The number of observations for each country is quite limited: 35 - 44. The approach of splitting the sample into two sets:  a training set and another one, a test set is not possible. In this case, the bootstrap method can be used to assess the quality of the model chosen for each country.  
+
+A function, boot.fn() is first created which takes in the data set for each country as well as a set of indices for the observations, and returns the intercept and the estimates of the coefficients of each chosen predictor. This function is then applied to the full set of observations in order to compute the estimates of the various coefficients. The boot() function is then used to compute the standard errors of the bootstrap estimates for the intercept and coefficient estimates of the chosen predictors. 
+
+## A. Singapore
+```{r}
+attach(df_singapore)
+library(boot)
+boot.fn_sing <- function(data, index) {
+  return(coef(lm(quad.sing.3, data = df_singapore)))
+}
+
+boot.fn_sing(df_singapore, 1:44)
+
+boot(df_singapore, boot.fn_sing, 44)
+```
+
+We note that for both bias and standard errors values, they are all zero, indicating that this is the right explanatory model for Singapore’s GDP. 
+
+The same function can be applied to the data related to Mauritius and Malta to cross validate the results. However, given the limitations of the lm() function, it is best that a more in depth analysis is done using the ARIMA models before any cross validation is done.
+
+
+# 7.Concluding Remarks
+It is quite surprising to find that all three countries regression model demonstrates a negative relationship between the economic indicator Manufacturing and GDP. However, this is a partial analysis.  Further analysis is needed to remove the sequential correlation by using the ARIMA model.  Also, in terms of the size of the dataset, it may be necessary to use more data such as quarterly instead of yearly. Unfortunately, these data are not available on the World Bank database.  
+
+From the series of correlations tests effected for each country, it can be inferred that Singapore has undoubtedly been investing heavily in its economy, strengthening its manufacturing sector as the latter’s contribution has exceeded the 20% mark for most of the time, creating a virtuous circle of economic growth which may have contributed to the improvement of its economic complexity for the past few decades.  It is also important to note that Singapore is known to have a large community of expatriates – a pool of skilled labour to offset the effects of its ageing population and the lack of local skills for the set up of a number of its existing industries. Though its economy is small, it has capitalised on its geographic location to set up a trading hub for the region targeting neighbouring countries such as Malaysia, Indonesia, Thailand which are bigger markets.
+
+Similarly, Malta has also been investing heavily into its economy though its economic complexity is relatively low as it is not included in the Economic Complexity Index. However, it has taken advantage of its geographic proximity with the European continent and has also been promoting its offshore sector. Its consistent approach of capitalising on its geographic location and attracting foreign funds have helped the country to develop its industrial sectors and its tourism sector.  Being of small size, the tourism sector has undoubtedly played an important role in the development of the economy. 
+
+Mauritius suffers continuously from the negative impact of its current account deficit which is quite substantial compared to that of Singapore and Malta.  This is why though the level of investment is quite high, its economy is unable to grow because most of the country’s earnings are spent rather than invested.The coefficient estimate for the Current Account variable is positive implying that a large deficit hinders the economic growth of the country and vice versa. Also, its working population is ageing and the country is also suffering from brain drain. It has only recently addressed this issue by allowing foreign labour. The government is also trying to address the gender gap as there is still for improvement as regards to the role of women in the workforce.  
+
+# 8.References
+1. Introduction to Data Science by Rafael A. Izizarry 
+
+1. *An Introduction to Statistical Learning: With Applications in R (Springer Texts in Statistics Book 103)* by James Gareth, Daniela Witten, Trevor Hastie, Robert Tibshirani
+
+1. The Role of Manufacturing and Services Sector in Economic Growth: An Empirical Study of Developing Countries by Eman Attiah. *European Research Studies Journal*
+
+1. The Observatory of Economic Complexity
+
+1. Linkages and Economic Development by Dominick Bartelme and Yuriy Gorodnichenko. *National Bureau of Economic Research*
+
+1. Breakout Nations: In Pursuit of the Next Economic Miracles by Ruchir Sharma
+
+1. A Practical Guide to Data Analysis Using R: An Example-Based Approach by John H Maindonald, W. John Braun, Jeffrey L. Andrews
+
+1. R Graphics Cookbook, 2nd Edition, by Winston Chang
